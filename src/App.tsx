@@ -44,6 +44,7 @@ import { Preview, paperSizes, circled } from './Preview';
 import type { PrintMode } from './Preview';
 import { blankReasoningExample } from './examples';
 import PinkOutput from './PinkOutput';
+import PinkPreview from './PinkPreview';
 const icons = {
   text: FileText,
   image: ImageIcon,
@@ -72,6 +73,8 @@ function readImage(file: File): Promise<string> {
 }
 export default function App() {
   const [doc, setDoc] = useState<ExamDocument>(() => demo());
+  const isPink = doc.pageTemplate === 'pink';
+  const previewPaper = isPink ? 'A4' : doc.paper;
   const [loaded, setLoaded] = useState(false);
   const [home, setHome] = useState(!location.hash.startsWith('#editor'));
   const homeRef = useRef(home);
@@ -275,6 +278,7 @@ export default function App() {
     setModal(null);
     setSearch('');
     setTab('problem');
+    if (next.pageTemplate === 'pink') setMode('questions');
     setHome(false);
     setStatus('saved');
     location.hash = 'editor';
@@ -360,6 +364,19 @@ export default function App() {
     window.print();
   };
   const warningHandler = useCallback((v: string[]) => setWarnings(v), []);
+  const choosePageTemplate = (template: 'exam' | 'pink') => {
+    update(d => ({ ...d, pageTemplate: template }));
+    if (template === 'pink') setMode('questions');
+  };
+  const editPinkBlock = (problemId: string, blockId: string) => {
+    setSelectedId(problemId);
+    setTab('problem');
+    requestAnimationFrame(() => {
+      const el = document.querySelector<HTMLElement>(`.block-card[data-block-id="${CSS.escape(blockId)}"]`);
+      el?.scrollIntoView({ block: 'center', behavior: 'smooth' });
+      el?.querySelector<HTMLElement>('[contenteditable="true"]')?.focus({ preventScroll: true });
+    });
+  };
   const readyHandler = useCallback((v: boolean, version?: string) => {
     layoutReady.current = { ready:v, version:version ?? layoutReady.current.version };
     setReady(v);
@@ -370,16 +387,19 @@ export default function App() {
       content = stage.current;
     if (!el || !content) return;
     const observer = new ResizeObserver(() => {
-      const paperWidth = (paperSizes[doc.paper].width * 96) / 25.4;
-      const width = view === 'exam' ? paperWidth : Math.min(530, paperWidth);
+      const paperWidth = (paperSizes[previewPaper].width * 96) / 25.4;
+      const width = isPink || view === 'exam' ? paperWidth : Math.min(530, paperWidth);
       setAutoZoom(Math.min(1, (el.clientWidth - 48) / width));
       setHeight(content.scrollHeight);
     });
     observer.observe(el);
     observer.observe(content);
     return () => observer.disconnect();
-  }, [doc.paper, view, mode, home]);
+  }, [previewPaper, isPink, view, mode, home]);
   const scale = zoom ?? autoZoom;
+  useEffect(() => {
+    if (isPink && view === 'problem') pane.current?.scrollTo({ top: 0 });
+  }, [isPink, view, selectedId]);
   const applyTemplate = (blocks: Block[]) => {
     const copy = blocks.map(copyBlock);
     if ([...activeBlocks, ...copy].filter((b) => b.kind === 'choices').length > 1) {
@@ -390,14 +410,14 @@ export default function App() {
     notify('템플릿을 삽입했습니다.');
   };
   // Card contents depend on metadata, not on the text being edited.
-  const cardMetadata = JSON.stringify([doc.grade, doc.elective, doc.problems.map(p => [p.id, p.title, p.section, p.type, p.score])]);
+  const cardMetadata = JSON.stringify([doc.pageTemplate, doc.grade, doc.elective, doc.problems.map(p => [p.id, p.title, p.section, p.type, p.score])]);
   const problemCards = useMemo(() => ordered(doc)
                     .filter(
                       (p) => !search || p.title.includes(search) || String(nums.get(p.id)).includes(search),
                     )
                     .map((p, i, all) => (
                       <div key={p.id}>
-                        {doc.grade === '3' && (i === 0 || all[i - 1]?.section !== p.section) && (
+                        {!isPink && doc.grade === '3' && (i === 0 || all[i - 1]?.section !== p.section) && (
                           <div className="section-label">
                             {p.section === 'common' ? '공통 문항' : `선택 · ${doc.elective}`}
                             <span>{all.filter((x) => x.section === p.section).length}</span>
@@ -475,7 +495,7 @@ export default function App() {
     );
   return (
     <div className="app">
-      <style>{`@media print { @page {size: ${paperSizes[doc.paper].width}mm ${paperSizes[doc.paper].height}mm; margin:0;} }`}</style>
+      <style>{`@media print { @page {size: ${paperSizes[previewPaper].width}mm ${paperSizes[previewPaper].height}mm; margin:0;} }`}</style>
       <header className="topbar">
         <button onClick={() => void goHome()} title="문서 보관함으로 돌아가기">
           <FolderOpen size={16} />
@@ -521,7 +541,7 @@ export default function App() {
           </span>
         </div>
         <div className="top-actions">
-          <button onClick={() => setPinkOutput(true)}><FileText size={16}/><span>벚꽃 문제지</span></button>
+          <button aria-pressed={isPink} onClick={() => choosePageTemplate('pink')}><FileText size={16}/><span>벚꽃 템플릿</span></button>
           <button title="문서 불러오기" onClick={() => input.current?.click()}>
             <FolderOpen size={16} />
             <span>불러오기</span>
@@ -538,7 +558,8 @@ export default function App() {
           </button>
           <button
             className="hwpx-button"
-            disabled={exporting}
+            disabled={exporting || isPink}
+            title={isPink ? '벚꽃 템플릿은 PDF 내보내기를 이용하세요.' : undefined}
             onClick={async () => {
               setExporting(true);
               try {
@@ -557,11 +578,11 @@ export default function App() {
           </button>
           <button
             className="primary"
-            onClick={() => void print()}
+            onClick={() => isPink ? setPinkOutput(true) : void print()}
             disabled={!ready || previewDoc !== doc || readyVersion !== `${doc.id}:${doc.updatedAt}:${mode}`}
           >
             <Printer size={16} />
-            <span>인쇄 / PDF</span>
+            <span>{isPink ? 'PDF 내보내기' : '인쇄 / PDF'}</span>
           </button>
           <button className="icon-button" title="사용 안내" onClick={() => setModal('help')}>
             <HelpCircle size={17} />
@@ -580,7 +601,7 @@ export default function App() {
           </button>
         </div>
       </header>
-      {pinkOutput && <PinkOutput doc={doc} onClose={() => setPinkOutput(false)} onExample={openDocument} />}
+      {pinkOutput && <PinkOutput doc={doc} onClose={() => setPinkOutput(false)} onExample={openDocument} onPrint={async () => { setPinkOutput(false); await new Promise<void>(resolve => requestAnimationFrame(() => resolve())); await print(); }} />}
       <div className="workspace">
         {sidebar && (
           <aside className="sidebar">
@@ -1248,6 +1269,10 @@ export default function App() {
             </button>
           </div>
           <div className="preview-toolbar">
+            <select className="pink-template-select" aria-label="문제지 템플릿" value={doc.pageTemplate ?? 'exam'} onChange={e => choosePageTemplate(e.target.value as 'exam'|'pink')}>
+              <option value="exam">모의고사 템플릿</option>
+              <option value="pink">벚꽃 · 한 장에 한 문항</option>
+            </select>
             <div className="preview-switch">
               <button className={view === 'exam' ? 'active' : ''} onClick={() => setView('exam')}>
                 전체 시험지
@@ -1259,6 +1284,7 @@ export default function App() {
             <div className="preview-options">
               <select
                 aria-label="출력 종류"
+                disabled={isPink}
                 value={mode}
                 onChange={(e) => {
                   setMode(e.target.value as PrintMode);
@@ -1288,7 +1314,7 @@ export default function App() {
               {doc.year} · {doc.month}월 · 고{doc.grade}
             </span>
             <span>
-              {doc.paper} · 2단{doc.grade === '3' ? ` · ${doc.elective}` : ''}
+              {isPink ? '벚꽃 · A4 · 한 장에 한 문항' : `${doc.paper} · 2단${doc.grade === '3' ? ` · ${doc.elective}` : ''}`}
             </span>
           </div>
           {warnings.length > 0 && (
@@ -1307,7 +1333,7 @@ export default function App() {
               className="stage-shell"
               style={{
                 height: height * scale + 32,
-                width: (view === 'exam' ? (paperSizes[doc.paper].width * 96) / 25.4 : 530) * scale,
+                width: (isPink || view === 'exam' ? (paperSizes[previewPaper].width * 96) / 25.4 : 530) * scale,
               }}
             >
               <div
@@ -1315,10 +1341,10 @@ export default function App() {
                 ref={stage}
                 style={{
                   transform: `scale(${scale})`,
-                  width: view === 'exam' ? (paperSizes[doc.paper].width * 96) / 25.4 : 530,
+                  width: isPink || view === 'exam' ? (paperSizes[previewPaper].width * 96) / 25.4 : 530,
                 }}
               >
-                {selected && (
+                {selected && (isPink ? <PinkPreview doc={previewDoc} selected={previewDoc.problems.find(p=>p.id===selectedId) ?? previewDoc.problems[0]} view={view} onWarnings={warningHandler} onReady={readyHandler} onEdit={editPinkBlock}/> : (
                   <Preview
                     doc={previewDoc}
                     selected={previewDoc.problems.find((p) => p.id === selectedId) ?? previewDoc.problems[0]}
@@ -1327,12 +1353,12 @@ export default function App() {
                     onWarnings={warningHandler}
                     onReady={readyHandler}
                   />
-                )}
+                ))}
               </div>
             </div>
           </div>
           <div className="output-note">
-            웹 미리보기 · 원서체 PDF는 미검증입니다. 한글 파일로 원래 서체를 지정해 내보낼 수 있습니다.
+            {isPink ? '템플릿의 본문·조건·선택지를 누르면 해당 편집칸으로 이동합니다. 정밀 PDF는 Euler 수식체로 조판합니다.' : '웹 미리보기 · 원서체 PDF는 미검증입니다. 한글 파일로 원래 서체를 지정해 내보낼 수 있습니다.'}
           </div>
           <footer className="preview-footer">
             <span>
@@ -1391,6 +1417,8 @@ export default function App() {
             </header>
             {modal === 'settings' ? (
               <div className="settings-form">
+                <label>문제지 템플릿<select aria-label="설정 문제지 템플릿" value={doc.pageTemplate ?? 'exam'} onChange={e=>choosePageTemplate(e.target.value as 'exam'|'pink')}><option value="exam">모의고사 템플릿</option><option value="pink">벚꽃 · 한 장에 한 문항</option></select></label>
+                {isPink ? <p>벚꽃 양식은 A4 세로, 한 장에 한 문항, 본문 15.5pt로 고정됩니다. 문항 번호·본문·조건·선택지만 출력하며, 제목·정답·해설·표지·간지는 넣지 않습니다.</p> : <>
                 <label>
                   출력 양식
                   <select
@@ -1629,6 +1657,7 @@ export default function App() {
                   </label>
                   <small>고3 선택 문항 앞에 삽입하며, 문항 쪽 번호에는 포함하지 않습니다.</small>
                 </fieldset>
+                </>}
                 <button className="primary wide" onClick={() => setModal(null)}>
                   설정 완료 <Check size={16} />
                 </button>

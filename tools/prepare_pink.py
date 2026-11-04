@@ -7,6 +7,11 @@ from pink_pdf import sample, ROOT, TEMPLATE
 
 out = ROOT / 'public/pink'
 out.mkdir(parents=True, exist_ok=True)
+for name in ['NanumGothic-Regular.ttf', 'NanumGothic-Bold.ttf', 'Korean.ttf']:
+    shutil.copy2(TEMPLATE / 'fonts' / name, out / name)
+shutil.copytree(TEMPLATE / 'licenses', out / 'licenses', dirs_exist_ok=True)
+with fitz.open(TEMPLATE / 'background.pdf') as background:
+    background[0].get_pixmap(matrix=fitz.Matrix(2, 2), alpha=False).pil_save(out / 'background.webp', format='WEBP', quality=95)
 (out / 'sample.json').write_text(json.dumps(sample(), ensure_ascii=False, indent=2), encoding='utf-8')
 pdf = ROOT / 'output/pdf/pink-worksheet.pdf'
 if not pdf.exists():

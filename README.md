@@ -2,13 +2,15 @@
 
 ## 벚꽃 문제지 PDF와 GitHub Actions
 
-편집기 상단의 **벚꽃 문제지**에서 원본 디자인의 완성 PDF(8쪽)를 내려받거나, 원본 8문항을 별도 문서로 열어 편집할 수 있습니다. 기존 문서는 보관합니다. A4 세로, 한 쪽 한 문항, 나눔고딕 15.5pt와 Euler 수식체, 원본 배경을 사용합니다. 제목·정답·해설·표지는 출력하지 않습니다.
+새 문서에서 **벚꽃 · A4 · 한 장에 한 문항**을 선택하거나, 편집기 상단의 **벚꽃 템플릿**을 눌러 현재 문서에 적용합니다. 본문·수식·조건·선택지를 수정하면 같은 벚꽃 페이지 위에 바로 반영됩니다. 페이지의 블록을 누르면 해당 편집칸으로 이동하며, 템플릿 선택은 자동 저장·파일 백업·가져오기에도 유지됩니다. 기존 모의고사 문서의 크기와 설정은 보존합니다. A4 세로, 한 쪽 한 문항, 나눔고딕 15.5pt와 Euler 수식체, 원본 배경을 사용합니다. 제목·정답·해설·표지는 출력하지 않습니다.
+
+**PDF 내보내기**는 현재 편집한 문서를 보여주며 **현재 문서 인쇄 / PDF 저장**으로 미리보기 배치를 출력합니다. 브라우저 수식은 KaTeX 배치이며, 원본 Euler 수식체의 정밀 PDF는 같은 화면의 Actions 또는 로컬 XeLaTeX 조판으로 생성합니다. 원본 8문항은 출력 화면의 예제 메뉴에서 별도 문서로 불러옵니다.
 
 현재 문서의 본문·조건·박스·최대 5개 선택지를 **조판 소스 ZIP**으로 내보냅니다. 이미지·보기·글머리표는 명시적으로 거부하며 내용이 조용히 누락되지 않습니다. 소스 ZIP 안의 README에 실행 방법이 있습니다.
 
 - 로컬: `npm ci`, `python -m pip install PyMuPDF==1.26.6 pillow`, XeLaTeX 설치 후 `npm run pink:prepare`. `npm run pdf:server`와 `npm run dev`를 함께 실행하면 **현재 문서 PDF 생성**을 사용할 수 있습니다. Tectonic도 지원합니다.
-- 배포판: 벚꽃 문제지 → GitHub Actions에서 PDF 만들기 → 문항 JSON 저장 → [Build worksheet PDF](https://github.com/nst333/Flux/actions/workflows/worksheet.yml)의 Run workflow → `document_json`에 JSON 전체 붙여넣기 → 실행의 `worksheet` 아티팩트 다운로드. 저장소 쓰기 권한이 필요합니다. 제출한 문항은 GitHub Actions로 전송됩니다. 입력을 비우면 원본 8문항을 생성합니다.
-- 웹앱 배포: [Flux](https://nst333.github.io/Flux/). `main`에 반영하면 테스트·원본 PDF 조판·검수·Vite 빌드 후 GitHub Pages로 배포합니다. 이 정적 호스팅은 XeLaTeX 서버를 실행하지 않으므로 수정 문항의 즉시 PDF 생성은 로컬 서비스 또는 Actions에서 수행합니다.
+- 배포판: PDF 내보내기 → 정밀 PDF · GitHub Actions에서 만들기 → 문항 JSON 저장 → [Build worksheet PDF](https://github.com/nst333/Flux/actions/workflows/worksheet.yml)의 Run workflow → `document_json`에 JSON 전체 붙여넣기 → 실행의 `worksheet` 아티팩트 다운로드. 저장소 쓰기 권한이 필요합니다. 제출한 문항은 GitHub Actions로 전송됩니다. 입력을 비우면 원본 8문항을 생성합니다.
+- 웹앱 배포: [Flux](https://nst333.github.io/Flux/). `main`에 반영하면 테스트·원본 PDF 조판·검수·Vite 빌드 후 GitHub Pages로 배포합니다. 브라우저 인쇄는 정적 배포에서도 현재 문서를 바로 출력합니다. 원본 Euler 수식체의 정밀 조판은 로컬 서비스 또는 Actions에서 수행합니다. Actions는 배포 전 실제 템플릿 편집·저장·파일 왕복·미리보기·PDF 인쇄를 Chromium으로 검사합니다.
 
 원본 배경·글꼴·기준 PDF와 기존 앱의 바이너리 자산은 `templates/assets.zip`에 보관합니다. `scripts/prepare-pink.mjs`가 압축을 풀며 원본을 다시 그리지 않습니다. 글꼴 사용권은 `templates/pink/licenses/`에 있습니다. PC 전용 한컴 글꼴은 포함하지 않습니다.
 

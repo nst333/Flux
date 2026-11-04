@@ -26,7 +26,7 @@ export async function pinkExample(): Promise<ExamDocument> {
   const response = await fetch(pinkAsset('sample.json'));
   if (!response.ok) throw Error('예제 문항을 불러오지 못했습니다. 다시 시도하세요.');
   const source: PinkSource = await response.json();
-  return { ...demo(), id: id(), name: '벚꽃 · 부정적분 8문항', cover: false, interleaf: 'none', paper: 'A4',
+  return { ...demo(), id: id(), name: '벚꽃 · 부정적분 8문항', pageTemplate: 'pink', cover: false, interleaf: 'none', paper: 'A4',
     problems: source.problems.map((p, i) => ({ ...problem(), title: `문제 ${i + 1}`, answer: '',
       type: p.blocks.some(b => b.kind === 'choices') ? 'choice' : 'short',
       blocks: p.blocks.map(b => ({ ...block(b.kind), html: html(b.text || ''), items: (b.items || []).map(s => ({ id: id(), html: html(s) })) })) })),

@@ -56,6 +56,7 @@ export default function Library({
   const [target, setTarget] = useState<ExamDocument | null>(null);
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
+  const [pageTemplate, setPageTemplate] = useState<'exam'|'pink'>('pink');
   const file = useRef<HTMLInputElement>(null);
   const refresh = async () => {
     const [d, f] = await Promise.all([listDocuments(), listFolders()]);
@@ -96,6 +97,7 @@ export default function Library({
           name: name.trim(),
           description,
           problems: [problem()],
+          pageTemplate,
           folderId: folders.some((f) => f.id === scope) ? scope : undefined,
           updatedAt: new Date().toISOString(),
         };
@@ -407,9 +409,10 @@ export default function Library({
                   />
                 </label>
               )}
+              {dialog === 'new' && <label>문제지 템플릿<select aria-label="새 문서 템플릿" value={pageTemplate} onChange={e=>setPageTemplate(e.target.value as 'exam'|'pink')}><option value="pink">벚꽃 · A4 · 한 장에 한 문항</option><option value="exam">모의고사 템플릿</option></select></label>}
               <p className="library-local-note">
                 {dialog === 'new' &&
-                  '인쇄되는 시험지 제목은 편집기의 시험지 설정에서 별도로 정할 수 있습니다.'}
+                  (pageTemplate === 'pink' ? '문항을 입력하면 벚꽃 템플릿 위에 바로 반영됩니다.' : '인쇄되는 시험지 제목은 편집기의 시험지 설정에서 별도로 정할 수 있습니다.')}
               </p>
               <button type="submit" className="primary" disabled={!name.trim()}>
                 {dialog === 'rename' ? '저장' : '만들기'}

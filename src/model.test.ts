@@ -40,6 +40,14 @@ describe('LaTeX 원문 토큰 분리', () => {
   });
 });
 describe('문항 식별과 정답 연결', () => {
+  it('벚꽃 템플릿은 공통·선택 구분 없이 편집 순서대로 번호를 매긴다', () => {
+    const d = demo();
+    d.pageTemplate = 'pink';
+    d.problems[0].section = 'elective';
+    expect(ordered(d)).toEqual(d.problems);
+    expect(numbering(d).get(d.problems[0].id)).toBe(1);
+    expect(numbering(d).get(d.problems[3].id)).toBe(4);
+  });
   it('복제된 선지에 정답을 연결하고 원본과 ID를 공유하지 않는다', () => {
     const p = demo().problems[0],
       copy = copyProblem(p);

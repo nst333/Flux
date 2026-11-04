@@ -151,6 +151,8 @@ export function validateDocument(doc: any): asserts doc is ExamDocument {
   )
     throw Error('양식 값이 허용 범위를 벗어났습니다.');
   const used = new Set<string>();
+  if (doc.pageTemplate !== undefined && !['exam', 'pink'].includes(doc.pageTemplate))
+    throw Error('잘못된 문제지 템플릿입니다.');
   if (doc.printProfile !== undefined && !['legacy', 'kice-2026', 'office-2026'].includes(doc.printProfile))
     throw Error('잘못된 출력 양식입니다.');
   if (

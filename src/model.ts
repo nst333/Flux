@@ -48,6 +48,7 @@ export interface ExamDocument {
   fontSize: number;
   mathFontSize?: number;
   printProfile?: 'kice-2026' | 'office-2026' | 'legacy';
+  pageTemplate?: 'exam' | 'pink';
   lineHeight: number;
   margin: number;
   columnGap: number;
@@ -127,6 +128,7 @@ export function copyProblem(p: Problem): Problem {
   };
 }
 export function numbering(d: ExamDocument): Map<string, number> {
+  if (d.pageTemplate === 'pink') return new Map(d.problems.map((p, i) => [p.id, i + 1]));
   let common = 0,
     elective = 22;
   return new Map(
@@ -252,7 +254,7 @@ export function demo(): ExamDocument {
   };
 }
 export function ordered(d: ExamDocument) {
-  return d.grade === '3'
+  return d.grade === '3' && d.pageTemplate !== 'pink'
     ? [
         ...d.problems.filter((p) => p.section === 'common'),
         ...d.problems.filter((p) => p.section === 'elective'),

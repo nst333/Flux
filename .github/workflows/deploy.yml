@@ -29,6 +29,17 @@ jobs:
       - run: npm test
       - run: python -m unittest discover -s tools -p 'test_*.py'
       - run: npm run build -- --base=/Flux/
+      - run: npx playwright install --with-deps chromium
+      - name: Verify live template editing and PDF output
+        run: |
+          npm run preview -- --port 4173 --base=/Flux/ > /tmp/flux-preview.log 2>&1 &
+          curl --retry 20 --retry-connrefused --retry-delay 1 --fail --output /dev/null http://127.0.0.1:4173/Flux/
+          node scripts/pink-test.cjs http://127.0.0.1:4173/Flux/
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: template-editor-checks
+          path: test-results/pink-*
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

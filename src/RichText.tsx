@@ -22,8 +22,8 @@ function examMath(html: string) {
   return root.innerHTML;
 }
 const renderCache = new Map<string, { html: string; errors: number }>();
-export function renderMathHtml(html: string): { html: string; errors: number } {
-  const key = `${equationFontAvailable}:${html}`;
+export function renderMathHtml(html: string, examFonts = true): { html: string; errors: number } {
+  const key = `${examFonts && equationFontAvailable}:${html}`;
   const cached = renderCache.get(key);
   if (cached) return cached;
   let errors = 0;
@@ -37,7 +37,8 @@ export function renderMathHtml(html: string): { html: string; errors: number } {
     (_match, display, inline) => {
       const source = decode(display ?? inline);
       try {
-        return `<span class="${display !== undefined ? 'display-equation' : 'inline-equation'}">${examMath(katex.renderToString(source, { displayMode: display !== undefined, throwOnError: true, trust: false, strict: 'ignore' }))}</span>`;
+        const math = katex.renderToString(source, { displayMode: display !== undefined, throwOnError: true, trust: false, strict: 'ignore' });
+        return `<span class="${display !== undefined ? 'display-equation' : 'inline-equation'}">${examFonts ? examMath(math) : math}</span>`;
       } catch {
         errors++;
         const safe = source.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;');
@@ -54,8 +55,8 @@ export function renderMathHtml(html: string): { html: string; errors: number } {
   if (key.length <= 16000) renderCache.set(key, result);
   return result;
 }
-export const Rendered = memo(function Rendered({ html }: { html: string }) {
-  const rendered = renderMathHtml(html);
+export const Rendered = memo(function Rendered({ html, examFonts = true }: { html: string; examFonts?: boolean }) {
+  const rendered = renderMathHtml(html, examFonts);
   return (
     <div
       className="rendered"
