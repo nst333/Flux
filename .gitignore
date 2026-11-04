@@ -15,3 +15,7 @@ templates/pink/*.pdf
 templates/pink/*.ttf
 templates/pink/fonts/
 templates/pink/worksheet.tex
+
+# Extracted from templates/assets.zip
+public/*.png
+public/templates/base.hwpx

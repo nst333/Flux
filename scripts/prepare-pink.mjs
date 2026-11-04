@@ -24,5 +24,5 @@ for (const name of ['background.pdf', 'reference.tex', 'fonts/NanumGothic-Regula
 }
 zip.file('tools/pink_pdf.py', await readFile('tools/pink_pdf.py'));
 zip.file('problems.json', await readFile('public/pink/sample.json'));
-zip.file('README.txt', 'Flux 벚꽃 문제지\n\nPython 3와 XeLaTeX(TeX Live: xetex, latex-extra, fonts-recommended)가 필요합니다.\n압축을 푼 폴더에서 실행:\npython tools/pink_pdf.py --input problems.json --output worksheet.pdf\n\n문항별 지시와 정답은 출력하지 않습니다. 폰트 라이선스는 templates/pink/licenses/에 있습니다.\n문항 수정은 problems.json에서 합니다. JSON의 text 및 items에는 $…$, $$…$$ 수식을 쓸 수 있습니다.\n');
+zip.file('README.txt', 'Flux 벚꽃 문제지\n\nPython 3와 XeLaTeX(TeX Live: xetex, latex-extra, fonts-recommended)가 필요합니다.\n압축을 푼 폴더에서 실행:\npython -m pip install PyMuPDF==1.26.6\npython tools/pink_pdf.py --input problems.json --output worksheet.pdf\n\n문항별 지시와 정답은 출력하지 않습니다. 폰트 라이선스는 templates/pink/licenses/에 있습니다.\n문항 수정은 problems.json에서 합니다. JSON의 text 및 items에는 $…$, $$…$$ 수식을 쓸 수 있습니다.\n');
 await writeFile('public/pink/source-kit.zip', await zip.generateAsync({ type: 'nodebuffer', compression: 'DEFLATE' }));
