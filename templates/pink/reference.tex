@@ -1,0 +1,97 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage[margin=0mm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage[mathcal]{euler}
+\usepackage{fontspec,tikz,tcolorbox,graphicx}
+\usepackage[unicode,hidelinks]{hyperref}
+\setmainfont{NanumGothic-Regular.ttf}[Path=fonts/,BoldFont=NanumGothic-Bold.ttf]
+\newfontfamily\circledfont{Korean.ttf}[Path=fonts/]
+\XeTeXlinebreaklocale "ko"
+\XeTeXlinebreakskip=0pt plus 1pt
+\definecolor{ink}{HTML}{252125}
+\definecolor{rose}{HTML}{B94D75}
+\definecolor{muted}{HTML}{978B92}
+\definecolor{rule}{HTML}{E9CFDA}
+\definecolor{pale}{HTML}{FFF9FB}
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0pt}
+\setlength{\abovedisplayskip}{12pt}
+\setlength{\belowdisplayskip}{12pt}
+\linespread{1.5}
+\hypersetup{pdftitle={멘토링 - 부정적분 / 벚꽃 템플릿},pdfsubject={한 페이지 한 문항, 부정적분 8문항},pdfauthor={}}
+\newcommand{\place}[4]{\node[anchor=north west,inner sep=0pt,text=ink] at ([xshift=#1mm,yshift=-#2mm]current page.north west) {\begin{minipage}[t]{#3mm}#4\end{minipage}};}
+\newcommand{\cond}[1]{\begin{tcolorbox}[colback=pale,colframe=rule,boxrule=.5pt,arc=0pt,left=3mm,right=3mm,top=3mm,bottom=3mm,before skip=12pt,after skip=12pt]#1\end{tcolorbox}}
+\AtBeginDocument{\SetSymbolFont{operators}{normal}{OT1}{cmr}{m}{n}}
+\begin{document}
+\null\begin{tikzpicture}[remember picture,overlay]
+\node[anchor=north west,inner sep=0pt] at (current page.north west) {\includegraphics[width=210mm,height=297mm]{background.pdf}};
+\place{23}{59}{161}{\fontsize{19}{24}\selectfont\color{rose}\textbf{01.}}
+\place{23}{75}{161}{\fontsize{15.5}{24}\selectfont 다항함수 $f(x)$가 실수 전체의 집합에서 증가하고
+\[
+f'(x)=\{3x-f(1)\}\{x-1\}
+\]
+을 만족시킬 때, $f(2)$의 값은?
+\par\vspace{15pt}\noindent \makebox[30mm][l]{{\circledfont ①}\enspace $3$}\makebox[30mm][l]{{\circledfont ②}\enspace $4$}\makebox[30mm][l]{{\circledfont ③}\enspace $5$}\makebox[30mm][l]{{\circledfont ④}\enspace $6$}\makebox[30mm][l]{{\circledfont ⑤}\enspace $7$}}
+\end{tikzpicture}\newpage
+\null\begin{tikzpicture}[remember picture,overlay]
+\node[anchor=north west,inner sep=0pt] at (current page.north west) {\includegraphics[width=210mm,height=297mm]{background.pdf}};
+\place{23}{59}{161}{\fontsize{19}{24}\selectfont\color{rose}\textbf{02.}}
+\place{23}{75}{161}{\fontsize{15.5}{24}\selectfont 실수 전체의 집합에서 미분가능한 함수 $F(x)$의 도함수 $f(x)$가
+\[
+f(x)=\begin{cases}
+-2x & (x<0) \\
+k(2x-x^2) & (x\geq0) \end{cases}
+\]
+이다. $F(2)-F(-3)=21$일 때, 상수 $k$의 값을 구하시오.}
+\end{tikzpicture}\newpage
+\null\begin{tikzpicture}[remember picture,overlay]
+\node[anchor=north west,inner sep=0pt] at (current page.north west) {\includegraphics[width=210mm,height=297mm]{background.pdf}};
+\place{23}{59}{161}{\fontsize{19}{24}\selectfont\color{rose}\textbf{03.}}
+\place{23}{75}{161}{\fontsize{15.5}{24}\selectfont 삼차함수 $y=f(x)$는 $x=1$에서 극값을 갖고, 그 그래프가 원점에 대하여 대칭일 때, 이 그래프와 $x$축과의 교점의 $x$좌표 중에서 양수인 것은?
+\par\vspace{15pt}\noindent \makebox[30mm][l]{{\circledfont ①}\enspace $\sqrt2$}\makebox[30mm][l]{{\circledfont ②}\enspace $\sqrt3$}\makebox[30mm][l]{{\circledfont ③}\enspace $2$}\makebox[30mm][l]{{\circledfont ④}\enspace $\sqrt5$}\makebox[30mm][l]{{\circledfont ⑤}\enspace $\sqrt6$}}
+\end{tikzpicture}\newpage
+\null\begin{tikzpicture}[remember picture,overlay]
+\node[anchor=north west,inner sep=0pt] at (current page.north west) {\includegraphics[width=210mm,height=297mm]{background.pdf}};
+\place{23}{59}{161}{\fontsize{19}{24}\selectfont\color{rose}\textbf{04.}}
+\place{23}{75}{161}{\fontsize{15.5}{24}\selectfont 최고차항의 계수가 $1$인 삼차함수 $f(x)$가 다음 조건을 만족시킨다.
+\cond{\begin{minipage}[t]{9mm}(가)\end{minipage}\begin{minipage}[t]{135mm}$\displaystyle f'\left(\frac{11}{3}\right)<0$\end{minipage}\par\vspace{8pt}\begin{minipage}[t]{9mm}(나)\end{minipage}\begin{minipage}[t]{135mm}함수 $f(x)$는 $x=2$에서 극댓값 $35$를 갖는다.\end{minipage}\par\vspace{8pt}\begin{minipage}[t]{9mm}(다)\end{minipage}\begin{minipage}[t]{135mm}방정식 $f(x)=f(4)$는 서로 다른 두 실근을 갖는다.\end{minipage}}
+$f(0)$의 값은?
+\par\vspace{15pt}\noindent \makebox[30mm][l]{{\circledfont ①}\enspace $12$}\makebox[30mm][l]{{\circledfont ②}\enspace $13$}\makebox[30mm][l]{{\circledfont ③}\enspace $14$}\makebox[30mm][l]{{\circledfont ④}\enspace $15$}\makebox[30mm][l]{{\circledfont ⑤}\enspace $16$}}
+\end{tikzpicture}\newpage
+\null\begin{tikzpicture}[remember picture,overlay]
+\node[anchor=north west,inner sep=0pt] at (current page.north west) {\includegraphics[width=210mm,height=297mm]{background.pdf}};
+\place{23}{59}{161}{\fontsize{19}{24}\selectfont\color{rose}\textbf{05.}}
+\place{23}{75}{161}{\fontsize{15.5}{24}\selectfont 함수 $f(x)=\displaystyle\int(x^2+2x)dx$일 때,
+\[
+\displaystyle\lim_{h\to0}\frac{f(2+h)-f(2-h)}{h}
+\]
+의 값은?
+\par\vspace{15pt}\noindent \makebox[30mm][l]{{\circledfont ①}\enspace $14$}\makebox[30mm][l]{{\circledfont ②}\enspace $16$}\makebox[30mm][l]{{\circledfont ③}\enspace $18$}\makebox[30mm][l]{{\circledfont ④}\enspace $20$}\makebox[30mm][l]{{\circledfont ⑤}\enspace $22$}}
+\end{tikzpicture}\newpage
+\null\begin{tikzpicture}[remember picture,overlay]
+\node[anchor=north west,inner sep=0pt] at (current page.north west) {\includegraphics[width=210mm,height=297mm]{background.pdf}};
+\place{23}{59}{161}{\fontsize{19}{24}\selectfont\color{rose}\textbf{06.}}
+\place{23}{75}{161}{\fontsize{15.5}{24}\selectfont 다항함수 $f(x)$의 한 부정적분을 $F(x)$라 하고, 함수 $2f(x)+1$의 한 부정적분을 $G(x)$라 하자. $G(3)=2F(3)$일 때, $G(5)-2F(5)$의 값은?
+\par\vspace{15pt}\noindent \makebox[30mm][l]{{\circledfont ①}\enspace $1$}\makebox[30mm][l]{{\circledfont ②}\enspace $2$}\makebox[30mm][l]{{\circledfont ③}\enspace $3$}\makebox[30mm][l]{{\circledfont ④}\enspace $4$}\makebox[30mm][l]{{\circledfont ⑤}\enspace $5$}}
+\end{tikzpicture}\newpage
+\null\begin{tikzpicture}[remember picture,overlay]
+\node[anchor=north west,inner sep=0pt] at (current page.north west) {\includegraphics[width=210mm,height=297mm]{background.pdf}};
+\place{23}{59}{161}{\fontsize{19}{24}\selectfont\color{rose}\textbf{07.}}
+\place{23}{75}{161}{\fontsize{15.5}{24}\selectfont 실수 전체의 집합에서 미분가능한 함수 $f(x)$의 도함수 $f'(x)$가
+\[
+f'(x)=\begin{cases} 
+3x^2-1 & (x\leq1) \\
+2x & (x>1)
+\end{cases}
+\]
+이고 $f(0)=2$일 때, $f(2)$의 값은?
+\par\vspace{15pt}\noindent \makebox[30mm][l]{{\circledfont ①}\enspace $3$}\makebox[30mm][l]{{\circledfont ②}\enspace $\displaystyle\frac{7}{2}$}\makebox[30mm][l]{{\circledfont ③}\enspace $4$}\makebox[30mm][l]{{\circledfont ④}\enspace $\displaystyle\frac{9}{2}$}\makebox[30mm][l]{{\circledfont ⑤}\enspace $5$}}
+\end{tikzpicture}\newpage
+\null\begin{tikzpicture}[remember picture,overlay]
+\node[anchor=north west,inner sep=0pt] at (current page.north west) {\includegraphics[width=210mm,height=297mm]{background.pdf}};
+\place{23}{59}{161}{\fontsize{19}{24}\selectfont\color{rose}\textbf{08.}}
+\place{23}{75}{161}{\fontsize{15.5}{24}\selectfont 최고차항의 계수가 $1$인 사차함수 $f(x)$가 다음 조건을 만족시킨다.
+\cond{\begin{minipage}[t]{9mm}(가)\end{minipage}\begin{minipage}[t]{135mm}$f'(a)\leq0$인 실수 $a$의 최댓값은 $2$이다.\end{minipage}\par\vspace{8pt}\begin{minipage}[t]{9mm}(나)\end{minipage}\begin{minipage}[t]{135mm}집합 $\{x\vert f(x)=k\}$의 원소의 개수가 $3$이상이 되도록 하는 \\ 실수 $k$의 최솟값은 $\displaystyle\frac{8}{3}$이다.\end{minipage}}
+$f(0)=0$, $f'(1)=0$일 때, $f(3)$의 값은?}
+\end{tikzpicture}\newpage\end{document}

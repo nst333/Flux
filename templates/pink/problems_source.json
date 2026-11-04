@@ -1,0 +1,174 @@
+{
+  "$schema": "https://kiceditor.com/schemas/kicebin-document-v1.schema.json",
+  "version": 1,
+  "document": {
+    "title": "멘토링 - 부정적분",
+    "description": "",
+    "pagination": false,
+    "problems": [
+      {
+        "title": "문제 1",
+        "description": "",
+        "content": [
+          {
+            "type": "STATEMENT",
+            "content": "다항함수 $f(x)$가 실수 전체의 집합에서 증가하고\n$$\nf'(x)=\\{3x-f(1)\\}\\{x-1\\}\n$$\n을 만족시킬 때, $f(2)$의 값은?"
+          },
+          {
+            "type": "CHOICES",
+            "content": [
+              "$3$",
+              "$4$",
+              "$5$",
+              "$6$",
+              "$7$"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "문제 2",
+        "description": "",
+        "content": [
+          {
+            "type": "STATEMENT",
+            "content": "실수 전체의 집합에서 미분가능한 함수 $F(x)$의 도함수 $f(x)$가\n$$\nf(x)=\\begin{cases}\n-2x & (x<0) \\\\\nk(2x-x^2) & (x\\geq0) \\\\\n\\end{cases}\n$$\n이다. $F(2)-F(-3)=21$일 떄, 상수 $k$의 값을 구하시오."
+          }
+        ]
+      },
+      {
+        "title": "문제 3",
+        "description": "",
+        "content": [
+          {
+            "type": "STATEMENT",
+            "content": "삼차함수 $y=f(x)$는 $x=1$에서 극값을 갖고, 그 그래프가 원점에 대하여 대칭일 때, 이 그래프와 $x$축과의 교점의 $x$좌표 중에서 양수인 것은?"
+          },
+          {
+            "type": "CHOICES",
+            "content": [
+              "$\\sqrt2$",
+              "$\\sqrt3$",
+              "$2$",
+              "$\\sqrt5$",
+              "$\\sqrt6$"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "문제 4",
+        "description": "",
+        "content": [
+          {
+            "type": "STATEMENT",
+            "content": "최고차항의 계수가 $1$인 삼차함수 $f(x)$가 다음 조건을 만족시킨다."
+          },
+          {
+            "type": "CONDITIONS",
+            "content": [
+              "$\\displaystyle f'\\left(\\frac{11}{3}\\right)<0$",
+              "함수 $f(x)$는 $x=2$에서 극댓값 $35$를 갖는다.",
+              "방정식 $f(x)=f(4)$는 서로 다른 두 실근을 갖는다."
+            ]
+          },
+          {
+            "type": "STATEMENT",
+            "content": "$f(0)$의 값은?"
+          },
+          {
+            "type": "CHOICES",
+            "content": [
+              "$12$",
+              "$13$",
+              "$14$",
+              "$15$",
+              "$16$"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "문제 5",
+        "description": "",
+        "content": [
+          {
+            "type": "STATEMENT",
+            "content": "함수 $f(x)=\\displaystyle\\int(x^2+2x)dx$일 때,\n$$\n\\displaystyle\\lim_{h\\to0}\\frac{f(2+h)-f(2-h)}{h}\n$$\n의 값은?"
+          },
+          {
+            "type": "CHOICES",
+            "content": [
+              "$14$",
+              "$16$",
+              "$18$",
+              "$20$",
+              "$22$"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "문제 6",
+        "description": "",
+        "content": [
+          {
+            "type": "STATEMENT",
+            "content": "다항함수 $f(x)$의 한 부정적분을 $F(x)$라 하고, 함수 $2f(x)+1$의 한 부정적분을 $G(x)$라 하자. $G(3)=2F(3)$일 때, $G(5)-2F(5)$의 값은?"
+          },
+          {
+            "type": "CHOICES",
+            "content": [
+              "$1$",
+              "$2$",
+              "$3$",
+              "$4$",
+              "$5$"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "문제 7",
+        "description": "",
+        "content": [
+          {
+            "type": "STATEMENT",
+            "content": "실수 전체의 집합에서 미분가능한 함수 $f(x)$의 도함수 $f'(x)$가\n$$\nf'(x)=\\begin{cases} \n3x^2-1 & (x\\leq1) \\\\\n2x & (x>1)\n\\end{cases}\n$$\n이고 $f(0)=2$일 때, $f(2)$의 값은?"
+          },
+          {
+            "type": "CHOICES",
+            "content": [
+              "$3$",
+              "$\\displaystyle\\frac{7}{2}$",
+              "$4$",
+              "$\\displaystyle\\frac{9}{2}$",
+              "$5$"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "문제 8",
+        "description": "",
+        "content": [
+          {
+            "type": "STATEMENT",
+            "content": "$\\large 고난도\\space문제\\\\\\\\$\n최고차항의 계수가 $1$인 사차함수 $f(x)$가 다음 조건을 만족시킨다."
+          },
+          {
+            "type": "CONDITIONS",
+            "content": [
+              "$f'(a)\\leq0$인 실수 $a$의 최솟값은 $2$이다.",
+              "집합 $\\{x\\vert f(x)=k\\}$의 원소의 개수가 $3$이상이 되도록 하는 실수 $k$의 최솟값은 $\\displaystyle\\frac{8}{3}$이다."
+            ]
+          },
+          {
+            "type": "STATEMENT",
+            "content": "$f(0)=0$, $f'(1)=0$일 때, $f(3)$의 값은?"
+          }
+        ]
+      }
+    ]
+  }
+}

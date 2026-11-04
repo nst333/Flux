@@ -1,0 +1,61 @@
+const { chromium } = require('playwright');
+const assert = require('node:assert/strict');
+const fs = require('node:fs/promises');
+const JSZip = require('jszip');
+(async () => {
+  const browser = await chromium.launch({ channel: 'chrome', headless: true });
+  try {
+    const page = await browser.newPage({ viewport: { width: 1500, height: 1000 }, acceptDownloads: true });
+    const errors = [];
+    page.on('pageerror', e => errors.push(e.message));
+    await page.goto((process.argv[2] || 'http://127.0.0.1:5173/') + '#editor');
+    await page.getByText('자동 저장됨', {exact:true}).waitFor();
+    await page.getByRole('button', { name: '벚꽃 문제지', exact: true }).click();
+    const dialog = page.getByRole('dialog', { name: '벚꽃 문제지', exact: true });
+    await dialog.waitFor();
+    await page.locator('.pink-sheet-preview img').evaluate(img => img.decode());
+    await page.getByRole('button', { name: '다음', exact: true }).click();
+    assert.match(await page.locator('.pink-sheet-preview img').getAttribute('src'), /page-2.webp/);
+    let pending = page.waitForEvent('download');
+    await page.getByRole('link', { name: '완성 PDF 다운로드' }).click();
+    const sample = await pending;
+    assert((await fs.readFile(await sample.path())).subarray(0,4).toString() === '%PDF');
+    await page.getByRole('button', { name: '8문항을 새 문서로 편집', exact: true }).click();
+    await dialog.waitFor({state:'hidden'});
+    assert.equal(await page.locator('.problem-card').count(), 8);
+    await page.getByLabel('문항 제목', {exact:true}).fill('새 이름은 출력하지 않음');
+    await page.getByRole('button', { name: '벚꽃 문제지', exact: true }).click();
+    await page.getByText('GitHub Actions에서 PDF 만들기', {exact:true}).click();
+    pending = page.waitForEvent('download');
+    await page.getByRole('button', {name:'문항 JSON 저장',exact:true}).click();
+    const data = JSON.parse(await fs.readFile(await (await pending).path(), 'utf8'));
+    assert.equal(data.problems.length, 8);
+    assert.equal(data.problems[0].blocks[0].kind, 'text');
+    assert(data.problems[0].blocks[0].text.includes("f'(x)"));
+    assert(data.problems[7].blocks[1].items[0].includes('최댓값'));
+    assert(!JSON.stringify(data).includes('새 이름은 출력하지 않음'));
+    pending = page.waitForEvent('download');
+    await page.getByRole('button', {name:'조판 소스 ZIP 다운로드',exact:true}).click();
+    const zip = await JSZip.loadAsync(await fs.readFile(await (await pending).path()));
+    assert(zip.file('templates/pink/background.pdf'));
+    assert(zip.file('templates/pink/fonts/NanumGothic-Regular.ttf'));
+    assert.deepEqual(JSON.parse(await zip.file('problems.json').async('string')), data);
+    if (process.env.TEST_LOCAL_PDF === '1') {
+      pending = page.waitForEvent('download', {timeout:120000});
+      await page.getByRole('button', {name:'현재 문서 PDF 생성',exact:true}).click();
+      const pdf = await pending;
+      await pdf.saveAs('output/pdf/pink-browser-export.pdf');
+      assert((await fs.readFile(await pdf.path())).subarray(0,4).toString() === '%PDF');
+    }
+    await fs.mkdir('test-results', {recursive:true});
+    await fs.writeFile('test-results/pink-export.json', JSON.stringify(data));
+    await page.screenshot({path:'test-results/pink-output-desktop.png'});
+    await page.setViewportSize({width:390,height:844});
+    await page.screenshot({path:'test-results/pink-output-mobile.png'});
+    assert(await dialog.evaluate(el => el.scrollWidth <= el.clientWidth));
+    await page.keyboard.press('Escape');
+    await dialog.waitFor({state:'hidden'});
+    assert.deepEqual(errors, []);
+    console.log('PASS: PDF download, eight-problem import, corrected math, JSON/ZIP export, desktop/mobile dialog, Escape, no browser errors');
+  } finally { await browser.close(); }
+})().catch(e => { console.error(e); process.exit(1); });

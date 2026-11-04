@@ -1,0 +1,48 @@
+name: Build worksheet PDF
+on:
+  workflow_dispatch:
+    inputs:
+      document_json:
+        description: 'Flux에서 저장한 문항 JSON 전체. 비워두면 원본 8문항.'
+        type: string
+        required: false
+permissions:
+  contents: read
+jobs:
+  worksheet:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: sudo apt-get update && sudo apt-get install -y texlive-xetex texlive-latex-extra texlive-fonts-recommended
+      - run: python -m pip install PyMuPDF==1.26.6 pillow
+      - run: npm ci
+      - run: node scripts/prepare-pink.mjs --compile
+      - name: Render requested document
+        env:
+          DOCUMENT_JSON: ${{ inputs.document_json }}
+        run: |
+          python - <<'PY'
+          import os, json, subprocess
+          from pathlib import Path
+          value = os.environ.get('DOCUMENT_JSON', '').strip()
+          if value:
+              json.loads(value)
+              Path('input.json').write_text(value, encoding='utf-8')
+              subprocess.run(['python', 'tools/pink_pdf.py', '--input', 'input.json', '--output', 'output/custom/worksheet.pdf'], check=True)
+          else:
+              import shutil
+              Path('output/custom').mkdir(parents=True, exist_ok=True)
+              shutil.copy2('output/pdf/pink-worksheet.pdf', 'output/custom/worksheet.pdf')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: worksheet
+          path: output/custom/
+          retention-days: 7

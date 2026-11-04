@@ -1,0 +1,17 @@
+node_modules/
+dist/
+analysis/
+test-results/
+/.netlify/
+local-fonts/
+public/background/
+output/
+tmp/
+tools/tectonic/
+tools/__pycache__/
+*.tsbuildinfo
+public/pink/
+templates/pink/*.pdf
+templates/pink/*.ttf
+templates/pink/fonts/
+templates/pink/worksheet.tex
