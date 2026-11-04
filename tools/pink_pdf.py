@@ -136,15 +136,14 @@ def build(data, destination, reference=False):
         if 'Missing character:' in log or re.search(r'Overfull \\[hv]box', log):
             raise ValueError('글꼴 누락 또는 영역 넘침이 있습니다. 문항을 나누거나 수식 길이를 줄여주세요.')
         import fitz
-        pdf = fitz.open(work / 'worksheet.pdf')
-        if len(pdf) != len(data['problems']):
-            raise ValueError('한 쪽에 한 문항 배치를 확인하지 못했습니다.')
-        for i, page in enumerate(pdf):
-            for span in page.get_texttrace():
-                x0, y0, x1, y1 = span['bbox']
-                if x0 < 22 * 72 / 25.4 or x1 > 188 * 72 / 25.4 or y1 > 270 * 72 / 25.4:
-                    raise ValueError(f'{i+1}번 문항이 흰 문제 영역을 넘습니다. 문항을 나눠주세요.')
-        pdf.close()
+        with fitz.open(work / 'worksheet.pdf') as pdf:
+            if len(pdf) != len(data['problems']):
+                raise ValueError('한 쪽에 한 문항 배치를 확인하지 못했습니다.')
+            for i, page in enumerate(pdf):
+                for span in page.get_texttrace():
+                    x0, y0, x1, y1 = span['bbox']
+                    if x0 < 22 * 72 / 25.4 or x1 > 188 * 72 / 25.4 or y1 > 270 * 72 / 25.4:
+                        raise ValueError(f'{i+1}번 문항이 흰 문제 영역을 넘습니다. 문항을 나눠주세요.')
         shutil.copy2(work / 'worksheet.pdf', destination)
         destination.with_suffix('.tex').write_text(source, encoding='utf-8')
     return destination
